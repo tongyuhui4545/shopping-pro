@@ -4,7 +4,7 @@ const orderSchema = mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
-        ref: "user"
+        ref: "User"
     },
     orderItems: [
         {
@@ -67,3 +67,7 @@ const orderSchema = mongoose.Schema({
         type: Date
     },
 }, { timestamps: true })
+
+const Order = mongoose.model("Order", orderSchema)
+
+export default Order
