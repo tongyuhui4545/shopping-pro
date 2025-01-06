@@ -12,12 +12,15 @@ const getProducts = asyncHandler(async (req, res) => {
 //@desc Fetch a product
 //@route GET /api/products/:id
 //@access Public
-const getProductById = asyncHandler(async (req, res) => {
-    const product = Product.find(p => p._id === req.params.id);
+const getProductById = asyncHandler(async (req, res) => { 
+
+    const product = await Product.findById(req.params.id);
     if (product) {
         res.json(product)
+        res.status(200);
     }
     res.status(404);
+
     throw new Error('Resource not found')
 });
 
