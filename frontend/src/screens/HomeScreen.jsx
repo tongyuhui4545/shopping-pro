@@ -5,7 +5,7 @@ import Product from "../components/Product";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 
-import { useGetProductsQuery } from '../slices/productSlice'
+import { useGetProductsQuery } from '../slices/productApiSlice'
 
 const HomeScreen = () => {
   // const [products, setProducts] = useState([]);
