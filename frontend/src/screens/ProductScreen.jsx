@@ -7,6 +7,7 @@ import Rating from '../components/Rating';
 import { useGetSingleProductQuery, useCreateReviewMutation } from "../slices/productApiSlice";
 import { addToCart } from "../slices/cartSlice";
 import { toast } from 'react-toastify'
+import Meta from '../components/Meta'
 import Loader from "../components/Loader";
 import Message from "../components/Message"
 
@@ -58,6 +59,7 @@ const ProductScreen = () => {
                 </Message>
             ) : (
                 <>
+                <Meta title={product.name} />
                     <Link className="btn btn-light my-3" to="/">Go Back</Link>
                     <Row>
                         <Col md={5}>

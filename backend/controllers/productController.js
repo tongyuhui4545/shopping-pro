@@ -5,9 +5,26 @@ import Product from "../models/productModel.js";
 //@route GET /api/products
 //@access Public
 const getProducts = asyncHandler(async (req, res) => {
-    const products = await Product.find({})
-    res.json(products)
+    const pageSize = 2;
+    const page = Number(req.query.pageNumber) || 1;
+
+    const search = req.query.keyword ? { name: { $regex: req.query.keyword, $options: 'i' } } : {};
+
+    const count = await Product.countDocuments({ ...search });
+
+    const products = await Product.find({ ...search })
+        .limit(pageSize)
+        .skip(pageSize * (page - 1));
+    res.json({ products, page, pages: Math.ceil(count / pageSize) })
 });
+
+//@desc Get top rated products
+//@route GET /api/products/top
+//@access Public
+const getTopProducts = asyncHandler(async (req, res) => {
+    const products = await Product.find({}).sort({ rating: -1 }).limit(3);
+    res.status(200).json(products);
+})
 
 //@desc Fetch a product
 //@route GET /api/products/:id
@@ -90,8 +107,7 @@ const deleteProduct = asyncHandler(async (req, res) => {
 //@route POST /api/products/:id/reviews
 //@access Private
 
-const createProductReview = asyncHandler(async (req, res) => {  console.log('zazuzuzuzu', req.body);
-
+const createProductReview = asyncHandler(async (req, res) => {
     const { rating, comment } = req.body;
 
     const product = await Product.findById(req.params.id);
@@ -113,8 +129,8 @@ const createProductReview = asyncHandler(async (req, res) => {  console.log('zaz
             user: req.user._id
         }
 
-     product.reviews.push(review);  
-        
+        product.reviews.push(review);
+
         product.numReviews = product.reviews.length;
 
         product.rating = product.reviews.reduce((acc, review) => (acc + review.rating), 0) / product.reviews.length;
@@ -133,5 +149,6 @@ export {
     createProduct,
     updateProduct,
     deleteProduct,
-    createProductReview
+    createProductReview,
+    getTopProducts
 } 
